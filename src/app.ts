@@ -1,35 +1,35 @@
 import prompts from "prompts";
 import chalk from "chalk";
-
-const prompts = require("prompts");
-
-const questions = [
-  {
-    type: "text",
-    name: "name",
-    message: "What is your name?",
-  },
-  {
-    type: "number",
-    name: "age",
-    message: "How old are you?",
-  },
-  {
-    type: "text",
-    name: "about",
-    message: chalk.red("What is the answer to everything?"),
-    initial: "42",
-    validate: (value: string) =>
-      value === "42" ? chalk.blue(`You are so wise!`) : `Wrong`,
-  },
-];
+import { askForAction, askTheQuestions } from "./questions";
+import {
+  existingUser,
+  handleGetPassword,
+  handleSetPassword,
+  isAllowed,
+} from "./commands";
 
 const run = async () => {
-  console.log(
-    chalk.blue("Welcome ") + chalk.green("to the Password Manager 🔐")
-  );
+  console.log(`Welcome to the ${chalk.underline.blue("Password Manager")} 🔐`);
+  const answers = await askTheQuestions();
+  // if (!existingUser(answers.username)) {
+  //   console.log("You are not our user!");
+  //   run();
+  // }
+  if (!isAllowed(answers.mainPassword)) {
+    console.log("Access denied!");
+    run();
+    return;
+  }
 
-  const response = await prompts(questions);
+  const action = await askForAction();
+  switch (action.command) {
+    case "set":
+      handleSetPassword(action.passwordName);
+      break;
+    case "get":
+      handleGetPassword(action.passwordName);
+      break;
+  }
 };
 
 run();
