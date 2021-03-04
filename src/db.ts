@@ -31,18 +31,23 @@ export async function readPasswordDoc(passwordName: string) {
   return await passwordCollection.findOne({ name: passwordName });
 }
 
-export async function updatePasswordValue(
+export async function updatePasswordDoc(
   passwordName: string,
   fieldsToUpdate: Partial<PasswordDoc>
 ): Promise<Boolean> {
   const passwordCollection = await getCollection<PasswordDoc>("passwords");
   const updateResult = await passwordCollection.updateOne(
-    {
-      name: passwordName,
-    },
+    { name: passwordName },
     { $set: fieldsToUpdate }
   );
   return updateResult.modifiedCount >= 1;
+}
+
+export async function updatePasswordValue(
+  passwordName: string,
+  newPasswordValue: string
+): Promise<Boolean> {
+  return await updatePasswordDoc(passwordName, { value: newPasswordValue });
 }
 
 export async function deletePasswordDoc(
