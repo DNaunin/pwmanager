@@ -7,35 +7,35 @@ import {
   handleSetPassword,
   isAllowed,
 } from "./commands";
-import { MongoClient } from "mongodb";
+
 import dotenv from "dotenv";
+import {
+  connectDB,
+  readPasswordDoc,
+  closeDB,
+  createPasswordDoc,
+  deletePasswordDoc,
+  updatePasswordValue,
+} from "./db";
 dotenv.config();
 
 const run = async () => {
   const url = process.env.MONGODB_URL;
 
   try {
-    const client = await MongoClient.connect(url, {
-      useUnifiedTopology: true,
-    });
-    console.log("Connected to DB!");
-
-    const db = client.db("pwmanager-dörte");
-
-    await db.collection("inventory ").insertOne({
-      item: "captainmarvel",
-      name: "Captain Marvel",
-      publisher: "Marvel",
-      aliases: { realname: "Carol Danvers", lastalias: "Miss Marvel" },
-      type: "hero",
-    });
-
-    client.close();
+    await connectDB(url, "pwmanager-dörte");
+    // await createPasswordDoc({ name: "Hulk", value: "111" });
+    // await deletePasswordDoc("Batman");
+    // await updatePasswordValue("Batman", "999");
+    console.log(await readPasswordDoc("Dörte"));
+    // console.log(await readPasswordDoc("Batman"));
+    console.log(await readPasswordDoc("Hulk"));
+    await closeDB();
   } catch (error) {
     console.error(error);
   }
 
-  console.log(`Welcome to the ${chalk.underline.blue("Password Manager")} 🔐`);
+  // console.log(`Welcome to the ${chalk.underline.blue("Password Manager")} 🔐`);
   // const answers = await askTheQuestions();
   // if (!existingUser(answers.username)) {
   //   console.log("You are not our user!");
