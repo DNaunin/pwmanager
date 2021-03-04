@@ -1,12 +1,6 @@
-import prompts from "prompts";
-import chalk from "chalk";
 import { askForAction, askTheQuestions } from "./questions";
-import {
-  existingUser,
-  handleGetPassword,
-  handleSetPassword,
-  isAllowed,
-} from "./commands";
+
+import { handleGetPassword, handleSetPassword, isAllowed } from "./commands";
 
 import dotenv from "dotenv";
 import {
@@ -17,6 +11,7 @@ import {
   deletePasswordDoc,
   updatePasswordValue,
 } from "./db";
+import { printWelcomeMessage, printNoAccess } from "./messages";
 dotenv.config();
 
 type CommandToFunction = {
@@ -30,20 +25,21 @@ const commandToFunction: CommandToFunction = {
 
 const run = async () => {
   const url = process.env.MONGODB_URL;
+  printWelcomeMessage();
 
   try {
-    const credentials = await askTheQuestions();
-    if (!isAllowed(credentials.mainPassword)) {
-      console.log("Welcome to Your Password Manager 🔐");
-      run();
-      return;
-    }
-
     await connectDB(url, "pwmanager-dörte");
 
     const action = await askForAction();
     const commandFunction = commandToFunction[action.command];
-    commandFunction(action.passwordName);
+    await commandFunction(action.passwordName);
+
+    // await deletePasswordDoc("Hulk");
+    // await createPasswordDoc({ name: "Dörte", value: "1234" });
+
+    // const action = await askForAction();
+    // const commandFunction = commandToFunction[action.command];
+    // commandFunction(action.passwordName);
 
     await closeDB();
   } catch (error) {
