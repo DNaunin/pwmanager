@@ -1,0 +1,18 @@
+### GET a password by name
+GET http://localhost:3333/api/passwords/Batman
+
+### GET an unknown password by name
+GET http://localhost:3333/api/passwords/wifi1234ihdsg
+
+### DELETE a password
+DELETE http://localhost:3333/api/passwords/Batman 
+
+### POST a new password 
+POST http://localhost:3333/api/passwords
+Content-Type: application/json
+
+{
+    "name": "Robin", 
+    "value": "6666"
+}
+

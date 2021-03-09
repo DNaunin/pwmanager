@@ -23,30 +23,29 @@ type Action = {
   command: "get" | "set";
   passwordName: string;
 };
-
 export const askForAction = (): Promise<Action> =>
   prompts([
     {
       type: "select",
       name: "command",
-      message: "What do you need?",
+      message: "What do you like to do now?",
       choices: [
-        { title: "Get Password", value: "get" },
-        { title: "Set Password", value: "set" },
+        { title: "Get a password", value: "get" },
+        { title: "Set a password", value: "set" },
       ],
     },
     {
       type: "text",
       name: "passwordName",
-      message: "Which Password?",
+      message: "Which password?",
     },
   ]);
 
-export const askForPassword = async (): Promise<string> => {
+export const askForPasswordValue = async (): Promise<string> => {
   const response = await prompts({
     type: "password",
     name: "passwordValue",
-    message: "What is the new Password?",
+    message: "What is the new password?",
   });
   return response.passwordValue;
 };
