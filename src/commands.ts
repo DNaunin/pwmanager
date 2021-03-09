@@ -1,5 +1,5 @@
-import { createPasswordDoc, readPasswordDoc } from "./db";
-import { printPassword } from "./messages";
+import { createPasswordDoc, readPasswordDoc, updatePasswordValue } from "./db";
+import { printPassword, printPasswordSet } from "./messages";
 import { askForPasswordValue } from "./questions";
 
 export const isAllowed = (mainPassword: string): boolean =>
@@ -12,8 +12,14 @@ export const handleSetPassword = async (
   passwordName: string
 ): Promise<void> => {
   const passwordValue = await askForPasswordValue();
-  await createPasswordDoc({ name: passwordName, value: passwordValue });
-  console.log(`Your password has been added!`);
+  const passwordDoc = await readPasswordDoc(passwordName);
+  if (passwordDoc) {
+    console.log("Password already present. Updating existing value!");
+    await updatePasswordValue(passwordName, passwordValue);
+  } else {
+    await createPasswordDoc({ name: passwordName, value: passwordValue });
+  }
+  printPasswordSet(passwordName);
 };
 
 export const handleGetPassword = async (

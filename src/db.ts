@@ -40,7 +40,7 @@ export async function readPasswordDoc(
     return null;
   }
   return {
-    name: readPasswordDoc.name,
+    name: passwordDoc.name,
     value: decryptPassword(passwordDoc.value),
   };
 }
