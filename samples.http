@@ -12,7 +12,7 @@ POST http://localhost:3333/api/passwords
 Content-Type: application/json
 
 {
-    "name": "Robin", 
-    "value": "6666"
+    "name": "Hallo", 
+    "value": "9999"
 }
 
